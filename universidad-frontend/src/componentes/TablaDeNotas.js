@@ -41,9 +41,10 @@ function TablaDeNotas() {
   const evaluarCondicion = (materia, todasPromocionadas) => {
     const estado = materia.estado;
 
-    if (estado === "Desaprobada-Recursar") return "";
+    if (estado === "Desaprobada-Recursar") return "-";
     if (estado === "A final") return "Dar final";
     if (estado === "Promocionada") return "Aprobada";
+     if (estado === "Valor incorrecto") return "-";
 
     return todasPromocionadas ? "Disponible para cursar" : "Requiere Correlativas";
   };
