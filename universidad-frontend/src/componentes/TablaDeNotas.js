@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./TablaDeNotas.css";
 
 function TablaDeNotas() {
@@ -38,6 +38,16 @@ function TablaDeNotas() {
     }));
   };
 
+  const evaluarCondicion = (materia, todasPromocionadas) => {
+    const estado = materia.estado;
+
+    if (estado === "Desaprobada-Recursar") return "";
+    if (estado === "A final") return "Dar final";
+    if (estado === "Promocionada") return "Aprobada";
+
+    return todasPromocionadas ? "Disponible para cursar" : "Requiere Correlativas";
+  };
+
   const manejarCambio = (id, campo, valor) => {
     const nuevasMaterias = materias.map((materia) =>
       materia.id === id ? { ...materia, [campo]: valor } : materia
@@ -75,13 +85,36 @@ function TablaDeNotas() {
         (nota) => nota !== null && nota >= 7 && nota < 11
       );
 
-      materia.condicion = todasPromocionadas
-        ? "Disponible para cursar"
-        : "Requiere Correlativas";
+      materia.condicion = evaluarCondicion(materia, todasPromocionadas);
     });
 
     setMaterias(nuevasMaterias);
   };
+
+  useEffect(() => {
+    const materiasInicializadas = materias.map((materia) => {
+      const idsCorrelativas = materia.correlativas
+        .split(",")
+        .map((id) => id.trim())
+        .filter((id) => id !== "-");
+
+      const notasCorrelativas = idsCorrelativas.map((id) => {
+        const correlativa = materias.find((m) => m.id === parseInt(id));
+        return correlativa ? parseFloat(correlativa.nota) : null;
+      });
+
+      const todasPromocionadas = notasCorrelativas.every(
+        (nota) => nota !== null && nota >= 7 && nota < 11
+      );
+
+      return {
+        ...materia,
+        condicion: evaluarCondicion(materia, todasPromocionadas),
+      };
+    });
+
+    setMaterias(materiasInicializadas);
+  }, []);
 
   const renderTablaPorAnio = (anio, color, titulo) => (
     <section className="tabla-materias">
@@ -132,43 +165,43 @@ function TablaDeNotas() {
                       onChange={(e) => manejarCambio(materia.id, "estado", e.target.value)}
                       disabled={!modoEdicion[`${materia.id}-estado`]}
                       className={`campo-input ${modoEdicion[`${materia.id}-estado`] ? "editable" : "estado-bloqueado"}`}
-                    >
-                      <option value="">-- Seleccionar estado --</option>
-                      <option value="Desaprobada-Recursar">Desaprobada-Recursar</option>
-                      <option value="A final">A final</option>
-                      <option value="Promocionada">Promocionada</option>
-                      <option value="Valor incorrecto">Valor incorrecto</option>
-                    </select>
-                    <button onClick={() => toggleEdicion(materia.id, "estado")} className="lapiz-btn">
-                      {modoEdicion[`${materia.id}-estado`] ? "✔️" : "✏️"}
-                    </button>
-                  </div>
-                </td>
-                <td>
-                  <div className="contenedor-condicion">
-                    <input
-                      type="text"
-                      value={materia.condicion}
-                      readOnly
-                      className="condicion-bloqueada"
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-    </section>
-  );
+                      >
+                        <option value="">-- Seleccionar estado --</option>
+                        <option value="Desaprobada-Recursar">Desaprobada-Recursar</option>
+                        <option value="A final">A final</option>
+                        <option value="Promocionada">Promocionada</option>
+                        <option value="Valor incorrecto">Valor incorrecto</option>
+                      </select>
+                      <button onClick={() => toggleEdicion(materia.id, "estado")} className="lapiz-btn">
+                        {modoEdicion[`${materia.id}-estado`] ? "✔️" : "✏️"}
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="contenedor-condicion">
+                      <input
+                        type="text"
+                        value={materia.condicion}
+                        readOnly
+                        className="condicion-bloqueada"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </section>
+    );
 
-  return (
-    <div>
-      <h2 className="titulo-libreta">MI LIBRETA VIRTUAL</h2>
-      {renderTablaPorAnio(1, "📘", "1º Año Analisis de Sistemas - IFTS 4")}
-      {renderTablaPorAnio(2, "📗", "2º Año Analisis de Sistemas - IFTS 4")}
-      {renderTablaPorAnio(3, "📙", "3º Año Analisis de Sistemas - IFTS 4")}
-    </div>
-  );
-}
+    return (
+      <div>
+        <h2 className="titulo-libreta">MI LIBRETA VIRTUAL</h2>
+        {renderTablaPorAnio(1, "📘", "1º Año Analisis de Sistemas - IFTS 4")}
+        {renderTablaPorAnio(2, "📗", "2º Año Analisis de Sistemas - IFTS 4")}
+        {renderTablaPorAnio(3, "📙", "3º Año Analisis de Sistemas - IFTS 4")}
+      </div>
+    );
+  }
 
-export default TablaDeNotas;
+  export default TablaDeNotas;
