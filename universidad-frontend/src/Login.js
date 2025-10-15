@@ -27,7 +27,7 @@ function Login() {
 
       if (response.ok) {
         setError('');
-        navigate('/instituciones');
+        navigate('/opcionesaelegir');
       } else {
         setError(resultado);
       }

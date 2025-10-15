@@ -17,7 +17,6 @@ import Register from './Register';
 import Materias from './Materias';
 import OpcionesAElegir from './OpcionesAElegir';
 import Formulario from './Formulario';
-import Instituciones from './Instituciones';
 import Chatbot from './Chatbot';
 import Institucionalinicio from './Institucional-Inicio';
 
@@ -40,7 +39,6 @@ function App() {
         <Route path="/registro" element={<Register />} />
         <Route path="/materias" element={<Materias />} />
         <Route path="/opcionesaelegir" element={<OpcionesAElegir />} />
-        <Route path="/instituciones" element={<Instituciones />} />
         <Route path="/Donde" element={<Donde />} />
         <Route path="/SobreIFTS" element={<SobreIFTS />} />
         <Route path="/OfertaAcademica" element={<OfertaAcademica />} />
