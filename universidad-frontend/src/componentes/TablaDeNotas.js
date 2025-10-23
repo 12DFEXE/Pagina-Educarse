@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./TablaDeNotas.css";
+import * as XLSX from "xlsx";
+
+
 
 function TablaDeNotas() {
+  
   const [materias, setMaterias] = useState([
     // 📘 1º Año
     { id: 101, anio: 1, correlativas: "-", nombre: "Matemática", nota: "", estado: "", condicion: "" },
@@ -28,6 +32,24 @@ function TablaDeNotas() {
     { id: 306, anio: 3, correlativas: "206", nombre: "Práctica Profesionalizante III", nota: "", estado: "", condicion: "" },
   ]);
 
+  const exportarNotasAExcel = () => {
+  const datosParaExcel = materias.map((materia) => ({
+    ID: materia.id,
+    Año: materia.anio,
+    Materia: materia.nombre,
+    Correlativas: materia.correlativas,
+    Nota: materia.nota,
+    Estado: materia.estado,
+    Condición: materia.condicion,
+  }));
+
+  const hoja = XLSX.utils.json_to_sheet(datosParaExcel);
+  const libro = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(libro, hoja, "Notas");
+
+  XLSX.writeFile(libro, "LibretaVirtual.xlsx");
+};
+
   const [modoEdicion, setModoEdicion] = useState({});
 
   const toggleEdicion = (id, campo) => {
@@ -38,10 +60,13 @@ function TablaDeNotas() {
     }));
   };
 
+
+
+
   const evaluarCondicion = (materia, todasPromocionadas) => {
     const estado = materia.estado;
 
-    if (estado === "Desaprobada-Recursar") return "-";
+    if (estado === "Desaprobada-Recursar") return "-Recursar";
     if (estado === "A final") return "Dar final";
     if (estado === "Promocionada") return "Aprobada";
      if (estado === "Valor incorrecto") return "-";
@@ -153,12 +178,19 @@ function TablaDeNotas() {
                 </td>
                 <td className="columna-grisada">{materia.nombre}</td>
                 <td>
+                <div className="campo-editable">
                   <input
-                    type="text"
-                    value={materia.nota}
-                    onChange={(e) => manejarCambio(materia.id, "nota", e.target.value)}
+                  type="text"
+                  value={materia.nota}
+                  readOnly={!modoEdicion[`${materia.id}-nota`]}
+                  className={`campo-input ${modoEdicion[`${materia.id}-nota`] ? "editable" : "nota-bloqueada"}`}
+                  onChange={(e) => manejarCambio(materia.id, "nota", e.target.value)}
                   />
-                </td>
+                  <button onClick={() => toggleEdicion(materia.id, "nota")} className="lapiz-btn">
+                  {modoEdicion[`${materia.id}-nota`] ? "✔️" : "✏️"}
+                  </button>
+                  </div>
+                  </td>
                 <td>
                   <div className="campo-editable">
                     <select
@@ -196,8 +228,11 @@ function TablaDeNotas() {
     );
 
     return (
-      <div>
-        <h2 className="titulo-libreta">MI LIBRETA VIRTUAL</h2>
+    <div>
+      <button onClick={exportarNotasAExcel} className="boton-exportar">
+      📤 Exportar a Excel
+    </button>
+      
         {renderTablaPorAnio(1, "📘", "1º Año Analisis de Sistemas - IFTS 4")}
         {renderTablaPorAnio(2, "📗", "2º Año Analisis de Sistemas - IFTS 4")}
         {renderTablaPorAnio(3, "📙", "3º Año Analisis de Sistemas - IFTS 4")}

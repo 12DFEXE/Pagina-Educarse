@@ -52,7 +52,7 @@ function Login() {
 
 
       <div className="login-panel">
-        <h2>Acceso Campus IFTS</h2>
+        <h2>Acceso a Mi Libreta Virtual IFTS</h2>
         <form onSubmit={manejarLogin}>
           {error && <div className="error-message">{error}</div>}
 

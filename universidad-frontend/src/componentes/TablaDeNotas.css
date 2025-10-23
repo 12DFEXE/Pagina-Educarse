@@ -65,6 +65,7 @@
 /* Campo editable y bloqueado base */
 .campo-input {
   width: 100%;
+  border: 1px solid #ccc;
   font-size: 0.9rem;
   box-sizing: border-box;
 }
@@ -135,3 +136,17 @@
 
 
 
+.boton-exportar {
+  margin: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #1c0674;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.boton-exportar:hover {
+  background-color: #1c0674;
+}

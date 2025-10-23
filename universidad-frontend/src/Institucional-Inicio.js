@@ -25,7 +25,7 @@ function Institucionalinicio() {
           <p>Educación pública, no arancelada y de calidad para tu futuro</p>
 
           {mostrarAcceso && (
-            <h2 className="acceso-campus">Accede al campus</h2>
+            <h2 className="acceso-campus"></h2>
           )}
         </div>
       </header>

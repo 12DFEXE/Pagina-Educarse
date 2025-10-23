@@ -34,7 +34,7 @@ function NavbarInstitucional() {
 
       {mostrarTextoEducativo && (
         <div className="texto-educativo">
-          <p>📚 Mi campus</p>
+          <p>📚 Mi Libreta Virtual</p>
         </div>
       )}
 
@@ -47,7 +47,7 @@ function NavbarInstitucional() {
 
             {mostrarCampus && (
               <button className="btncampus" onClick={() => manejarClick('/login')}>
-                Accedé al campus
+                Accedé a la Libreta Virtual
               </button>
             )}
           </>
